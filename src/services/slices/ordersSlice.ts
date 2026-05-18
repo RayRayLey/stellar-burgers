@@ -5,7 +5,6 @@ import {
   orderBurgerApi
 } from '../../utils/burger-api';
 import { TOrder } from '../../utils/types';
-import { stat } from 'fs';
 
 export const getOrders = createAsyncThunk('orders/getAll', async () =>
   getOrdersApi()
@@ -13,7 +12,10 @@ export const getOrders = createAsyncThunk('orders/getAll', async () =>
 
 export const getOrderByNumber = createAsyncThunk(
   'orders/getById',
-  async (number: number) => getOrderByNumberApi(number)
+  async (number: number) => {
+    const data = await getOrderByNumberApi(number);
+    return data.orders;
+  }
 );
 
 export const orderBurger = createAsyncThunk(
@@ -38,7 +40,11 @@ const initialState: TOrdersState = {
 export const orderSlice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCurrent: (state) => {
+      state.currentOrder = null;
+    }
+  },
   selectors: {
     getOrdersSelector: (state) => ({
       orders: state.orders,
@@ -71,7 +77,7 @@ export const orderSlice = createSlice({
       })
       .addCase(getOrderByNumber.fulfilled, (state, action) => {
         state.isOrdersLoading = false;
-        //
+        state.currentOrder = action.payload[0] ?? null;
       })
       .addCase(orderBurger.pending, (state) => {
         state.isOrdersLoading = true;
@@ -88,10 +94,12 @@ export const orderSlice = createSlice({
           ingredients: action.meta.arg
         };
         state.orders.push(newBurger);
+        state.currentOrder = newBurger;
       });
   }
 });
 
 export const { getOrdersSelector } = orderSlice.selectors;
+export const { clearCurrent } = orderSlice.actions;
 
-export default orderSlice.reducer;
+export default orderSlice;
