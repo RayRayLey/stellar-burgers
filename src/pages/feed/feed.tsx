@@ -7,7 +7,7 @@ import { getFeedsSelector, getFeeds } from '../..//services/slices/feedsSlice';
 import { getOrders } from '../../services/slices/ordersSlice';
 
 export const Feed: FC = () => {
-  const orders: TOrder[] = useSelector(getFeedsSelector).orders;
+  const orders: TOrder[] = useSelector(getFeedsSelector);
   const dispatch = useDispatch();
 
   useEffect(() => {

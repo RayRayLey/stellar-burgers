@@ -14,7 +14,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
 
     const constructorIngredient = {
       ...ingredient,
-      id: ingredient._id
+      id: `${ingredient._id}-${count}`
     };
 
     const handleAdd = () => {

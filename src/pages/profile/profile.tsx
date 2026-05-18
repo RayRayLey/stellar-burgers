@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from '../../services/store';
 import { Navigate } from 'react-router-dom';
 
 export const Profile: FC = () => {
-  const user = useSelector(getUserSelector).user;
+  const user = useSelector(getUserSelector);
   const dispatch = useDispatch();
 
   if (!user) {

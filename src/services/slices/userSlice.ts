@@ -5,7 +5,6 @@ import {
   TRegisterData,
   loginUserApi,
   TLoginData,
-  fetchWithRefresh,
   logoutApi,
   updateUserApi
 } from '../../utils/burger-api';
@@ -122,13 +121,9 @@ export const userSlice = createSlice({
     }
   },
   selectors: {
-    getUserSelector: (state) => ({
-      user: state.user,
-      isAuthChecked: state.isAuthChecked,
-      isAuthenticated: state.isAuthenticated,
-      isLoading: state.sending,
-      error: state.error
-    }),
+    getUserSelector: (state) => state.user,
+    authCheckedSelector: (state) => state.isAuthChecked,
+    isAuthenticatedSelector: (state) => state.isAuthenticated,
     sendingSelector: (state) => state.sending,
     sendErrorSelector: (state) => state.error,
     authSelector: (state) => state.form
@@ -216,8 +211,10 @@ export const checkUserAuth = createAsyncThunk(
 
 export const {
   getUserSelector,
-  sendErrorSelector,
+  authCheckedSelector,
+  isAuthenticatedSelector,
   sendingSelector,
+  sendErrorSelector,
   authSelector
 } = userSlice.selectors;
 

@@ -4,7 +4,7 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { getIngredientsSelector } from '../../services/slices/ingredientsSlice';
 import {
-  getOrdersSelector,
+  currentOrderSelector,
   getOrderByNumber
 } from '../../services/slices/ordersSlice';
 import { useSelector, useDispatch } from '../../services/store';
@@ -14,10 +14,8 @@ export const OrderInfo: FC = () => {
   const { number } = useParams();
   const dispatch = useDispatch();
 
-  const storeOrder = useSelector(getOrdersSelector).currentOrder;
-  const ingredients: TIngredient[] = useSelector(
-    getIngredientsSelector
-  ).ingredients;
+  const storeOrder = useSelector(currentOrderSelector);
+  const ingredients: TIngredient[] = useSelector(getIngredientsSelector);
 
   useEffect(() => {
     if (number) {

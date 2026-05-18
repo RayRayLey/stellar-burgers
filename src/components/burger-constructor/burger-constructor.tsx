@@ -8,11 +8,13 @@ import {
   getItemsSelector,
   clear
 } from '../../services/slices/constructorSlice';
-import orderSlice, {
-  getOrdersSelector,
+import {
+  currentOrderSelector,
+  loadingOrderSelector,
   clearCurrent,
   orderBurger
 } from '../../services/slices/ordersSlice';
+import { isAuthenticatedSelector } from '../../services/slices/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
@@ -23,16 +25,22 @@ export const BurgerConstructor: FC = () => {
   const backgroundLocation = location.state?.background;
 
   const constructorItems = useSelector(getItemsSelector);
+  const isAuthenticated = useSelector(isAuthenticatedSelector);
 
   const orderIngredients = constructorItems.ingredients.map(
     (ingredient) => ingredient.id
   );
 
-  const orderRequest = useSelector(getOrdersSelector).isOrdersLoading;
-  const orderModalData = useSelector(getOrdersSelector).currentOrder;
+  const orderRequest = useSelector(loadingOrderSelector);
+  const orderModalData = useSelector(currentOrderSelector);
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
     dispatch(orderBurger(orderIngredients));
   };
 

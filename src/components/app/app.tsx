@@ -20,6 +20,8 @@ import { useEffect } from 'react';
 
 import {
   getIngredientsSelector,
+  loadingIngredientsSelector,
+  errorSelector,
   getIngredients
 } from '../../services/slices/ingredientsSlice';
 
@@ -31,9 +33,9 @@ const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { ingredients, isIngredientsLoading, error } = useSelector(
-    getIngredientsSelector
-  );
+  const ingredients = useSelector(getIngredientsSelector);
+  const isIngredientsLoading = useSelector(loadingIngredientsSelector);
+  const error = useSelector(errorSelector);
 
   const location = useLocation();
   const backgroundLocation = location.state?.background;

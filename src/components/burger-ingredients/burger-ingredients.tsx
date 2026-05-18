@@ -8,7 +8,7 @@ import { getIngredientsSelector } from '../../services/slices/ingredientsSlice';
 import { useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
-  const ingredients = useSelector(getIngredientsSelector).ingredients;
+  const ingredients = useSelector(getIngredientsSelector);
 
   const { buns, mains, sauces } = ingredients.reduce(
     (acc, ingredient) => {

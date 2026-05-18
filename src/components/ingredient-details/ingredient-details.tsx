@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams();
-  const ingredients = useSelector(getIngredientsSelector).ingredients;
+  const ingredients = useSelector(getIngredientsSelector);
   const ingredientData = useMemo(
     () => ingredients.find((ingredient) => ingredient._id === id!),
     [id]
