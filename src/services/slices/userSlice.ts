@@ -168,7 +168,10 @@ export const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.sending = false;
-        state.error = action.error.message || 'Ошибка при входе';
+        state.error =
+          (action.payload as string) ||
+          action.error.message ||
+          'Ошибка при регистрации';
         state.isAuthChecked = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {

@@ -6,6 +6,8 @@ import {
 } from '../../utils/burger-api';
 import { TOrder } from '../../utils/types';
 
+import { clear } from '../../services/slices/constructorSlice';
+
 export const getOrders = createAsyncThunk('orders/getAll', async () =>
   getOrdersApi()
 );
@@ -20,13 +22,19 @@ export const getOrderByNumber = createAsyncThunk(
 
 export const orderBurger = createAsyncThunk(
   'orders/newOrder',
-  async (ingredients: string[]) => orderBurgerApi(ingredients)
+  async (ingredients: string[], { dispatch }) => {
+    const data = await orderBurgerApi(ingredients);
+    dispatch(clear());
+    dispatch(clearCurrent());
+    return data;
+  }
 );
 
 type TOrdersState = {
   orders: Array<TOrder>;
   currentOrder: TOrder | null;
   isOrdersLoading: boolean;
+  isModalLoading: boolean;
   error: string | null;
 };
 
@@ -34,6 +42,7 @@ const initialState: TOrdersState = {
   orders: [],
   currentOrder: null,
   isOrdersLoading: false,
+  isModalLoading: false,
   error: null
 };
 
@@ -49,6 +58,7 @@ export const orderSlice = createSlice({
     getOrdersSelector: (state) => state.orders,
     currentOrderSelector: (state) => state.currentOrder,
     loadingOrderSelector: (state) => state.isOrdersLoading,
+    modalLoadingSelector: (state) => state.isModalLoading,
     errorSelector: (state) => state.error
   },
   extraReducers: (builder) => {
@@ -78,15 +88,15 @@ export const orderSlice = createSlice({
         state.currentOrder = action.payload[0] ?? null;
       })
       .addCase(orderBurger.pending, (state) => {
-        state.isOrdersLoading = true;
+        state.isModalLoading = true;
         state.error = null;
       })
       .addCase(orderBurger.rejected, (state, action) => {
-        state.isOrdersLoading = false;
+        state.isModalLoading = false;
         state.error = action.error.message || 'Заказ не заказался';
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
-        state.isOrdersLoading = false;
+        state.isModalLoading = false;
         const newBurger: TOrder = {
           ...action.payload.order,
           ingredients: action.meta.arg
@@ -101,6 +111,7 @@ export const {
   getOrdersSelector,
   currentOrderSelector,
   loadingOrderSelector,
+  modalLoadingSelector,
   errorSelector
 } = orderSlice.selectors;
 export const { clearCurrent } = orderSlice.actions;

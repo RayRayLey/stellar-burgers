@@ -4,15 +4,13 @@ import { BurgerConstructorUI } from '@ui';
 
 import { useDispatch, useSelector } from '../../services/store';
 
-import {
-  getItemsSelector,
-  clear
-} from '../../services/slices/constructorSlice';
+import { getItemsSelector } from '../../services/slices/constructorSlice';
 import {
   currentOrderSelector,
   loadingOrderSelector,
-  clearCurrent,
-  orderBurger
+  modalLoadingSelector,
+  orderBurger,
+  clearCurrent
 } from '../../services/slices/ordersSlice';
 import { isAuthenticatedSelector } from '../../services/slices/userSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,11 +25,7 @@ export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(getItemsSelector);
   const isAuthenticated = useSelector(isAuthenticatedSelector);
 
-  const orderIngredients = constructorItems.ingredients.map(
-    (ingredient) => ingredient.id
-  );
-
-  const orderRequest = useSelector(loadingOrderSelector);
+  const orderRequest = useSelector(modalLoadingSelector);
   const orderModalData = useSelector(currentOrderSelector);
 
   const onOrderClick = () => {
@@ -41,11 +35,16 @@ export const BurgerConstructor: FC = () => {
       return;
     }
 
+    const orderIngredients = [
+      constructorItems.bun._id,
+      ...constructorItems.ingredients.map((ingredient) => ingredient._id),
+      constructorItems.bun._id
+    ];
+
     dispatch(orderBurger(orderIngredients));
   };
 
   const closeOrderModal = () => {
-    dispatch(clear());
     dispatch(clearCurrent());
     navigate(backgroundLocation);
   };

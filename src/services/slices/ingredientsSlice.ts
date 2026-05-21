@@ -18,6 +18,25 @@ const initialState: TIngredientsState = {
   error: null
 };
 
+export const categorised = (ingredients: Array<TIngredient>) =>
+  ingredients.reduce(
+    (acc, ingredient) => {
+      if (ingredient.type === 'bun') {
+        acc.buns.push(ingredient);
+      } else if (ingredient.type === 'main') {
+        acc.mains.push(ingredient);
+      } else if (ingredient.type === 'sauce') {
+        acc.sauces.push(ingredient);
+      }
+      return acc;
+    },
+    {
+      buns: [] as TIngredient[],
+      mains: [] as TIngredient[],
+      sauces: [] as TIngredient[]
+    }
+  );
+
 export const ingredientSlice = createSlice({
   name: 'ingredients',
   initialState,
@@ -25,7 +44,25 @@ export const ingredientSlice = createSlice({
   selectors: {
     getIngredientsSelector: (state) => state.ingredients,
     loadingIngredientsSelector: (state) => state.isIngredientsLoading,
-    errorSelector: (state) => state.error
+    errorSelector: (state) => state.error,
+    categorisedSelector: (state) =>
+      state.ingredients.reduce(
+        (acc, ingredient) => {
+          if (ingredient.type === 'bun') {
+            acc.buns.push(ingredient);
+          } else if (ingredient.type === 'main') {
+            acc.mains.push(ingredient);
+          } else if (ingredient.type === 'sauce') {
+            acc.sauces.push(ingredient);
+          }
+          return acc;
+        },
+        {
+          buns: [] as TIngredient[],
+          mains: [] as TIngredient[],
+          sauces: [] as TIngredient[]
+        }
+      )
   },
   extraReducers: (builder) => {
     builder
@@ -47,7 +84,8 @@ export const ingredientSlice = createSlice({
 export const {
   getIngredientsSelector,
   loadingIngredientsSelector,
-  errorSelector
+  errorSelector,
+  categorisedSelector
 } = ingredientSlice.selectors;
 
 export default ingredientSlice.reducer;

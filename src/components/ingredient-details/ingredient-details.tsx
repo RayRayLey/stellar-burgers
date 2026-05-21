@@ -13,7 +13,7 @@ export const IngredientDetails: FC = () => {
   const ingredients = useSelector(getIngredientsSelector);
   const ingredientData = useMemo(
     () => ingredients.find((ingredient) => ingredient._id === id!),
-    [id]
+    [id, ingredients]
   );
 
   if (!ingredientData) {

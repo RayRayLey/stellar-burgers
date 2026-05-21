@@ -7,6 +7,8 @@ import { TBurgerIngredientProps } from './type';
 import { addBun, addIngredient } from '../../services/slices/constructorSlice';
 import { useDispatch } from '../../services/store';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
     const location = useLocation();
@@ -14,7 +16,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
 
     const constructorIngredient = {
       ...ingredient,
-      id: `${ingredient._id}-${count}`
+      id: `${uuidv4()}`
     };
 
     const handleAdd = () => {

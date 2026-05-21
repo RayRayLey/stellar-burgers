@@ -4,7 +4,7 @@ import {
   getUserSelector,
   authCheckedSelector
 } from '../../services/slices/userSlice';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/store';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
