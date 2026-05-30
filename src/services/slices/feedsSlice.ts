@@ -8,7 +8,7 @@ export const getFeeds = createAsyncThunk('feeds/getAll', async () =>
 );
 
 type TFeedsState = {
-  feeds: TOrder[];
+  orders: TOrder[];
   total: number;
   totalToday: number;
   isFeedsLoading: boolean;
@@ -16,7 +16,7 @@ type TFeedsState = {
 };
 
 const initialState: TFeedsState = {
-  feeds: [],
+  orders: [],
   total: 0,
   totalToday: 0,
   isFeedsLoading: false,
@@ -28,13 +28,11 @@ export const feedSlice = createSlice({
   initialState,
   reducers: {},
   selectors: {
-    getFeedsSelector: (state) => ({
-      feeds: state.feeds,
-      total: state.total,
-      totalToday: state.totalToday,
-      isFeedsLoading: state.isFeedsLoading,
-      error: state.error
-    })
+    getFeedsSelector: (state) => state.orders,
+    totalSelector: (state) => state.total,
+    totalTodaySelector: (state) => state.totalToday,
+    loadingSelector: (state) => state.isFeedsLoading,
+    errorSelector: (state) => state.error
   },
   extraReducers: (builder) => {
     builder
@@ -48,11 +46,18 @@ export const feedSlice = createSlice({
       })
       .addCase(getFeeds.fulfilled, (state, action) => {
         state.isFeedsLoading = false;
-        state.feeds = action.payload.orders;
+        state.orders = action.payload.orders;
         state.total = action.payload.total;
         state.totalToday = action.payload.totalToday;
       });
   }
 });
 
-export const { getFeedsSelector } = feedSlice.selectors;
+export const {
+  getFeedsSelector,
+  totalSelector,
+  totalTodaySelector,
+  loadingSelector,
+  errorSelector
+} = feedSlice.selectors;
+export default feedSlice;

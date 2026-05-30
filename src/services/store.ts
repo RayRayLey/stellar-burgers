@@ -7,12 +7,29 @@ import {
 } from 'react-redux';
 
 import { ingredientSlice } from '../services/slices/ingredientsSlice';
+import { userSlice } from './slices/userSlice';
+import { orderSlice } from './slices/ordersSlice';
+import { feedSlice } from './slices/feedsSlice';
+import { constructorSlice } from './slices/constructorSlice';
 
-const rootReducer = combineSlices(ingredientSlice);
+const rootReducer = combineSlices(
+  ingredientSlice,
+  userSlice,
+  orderSlice,
+  feedSlice,
+  constructorSlice
+);
 
 const store = configureStore({
   reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production'
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['constructor/addIngredient'],
+        ignoredPaths: ['constructor']
+      }
+    })
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
