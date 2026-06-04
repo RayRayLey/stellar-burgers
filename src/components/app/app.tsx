@@ -61,7 +61,7 @@ const App = () => {
           path='/'
           element={
             isIngredientsLoading ? (
-              <Preloader />
+              <Preloader data-testid='loading' />
             ) : error ? (
               <div
                 className={`${styles.error} text text_type_main-medium pt-4`}

@@ -81,6 +81,8 @@ export const ingredientSlice = createSlice({
   }
 });
 
+export const ingredientsReducer = ingredientSlice.reducer;
+
 export const {
   getIngredientsSelector,
   loadingIngredientsSelector,

@@ -75,6 +75,8 @@ export const constructorSlice = createSlice({
   }
 });
 
+export const constructorReducer = constructorSlice.reducer;
+
 export const {
   addIngredient,
   removeIngredient,
