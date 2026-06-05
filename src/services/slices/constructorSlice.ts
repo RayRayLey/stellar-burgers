@@ -12,7 +12,7 @@ const initialState: TConstructorState = {
 };
 
 export const constructorSlice = createSlice({
-  name: 'constructor',
+  name: 'burgerConstructor',
   initialState,
   selectors: {
     getItemsSelector: (state) => ({

@@ -6,10 +6,13 @@ import {
   addIngredient,
   moveIngredientDown,
   moveIngredientUp,
-  removeIngredient
+  removeIngredient,
+  addBun,
+  clear
 } from '../src/services/slices/constructorSlice';
 
 import ingredients from './ingredients.json';
+import buns from './buns.json';
 
 describe('[constructorSlice] Проверка работы редьюсера конструктора бургера', () => {
   const mockIngredients = ingredients;
@@ -26,29 +29,54 @@ describe('[constructorSlice] Проверка работы редьюсера к
     };
   });
 
-  test('Добавление ингредиента', () => {
-    const currentState = {
-      bun: null,
-      ingredients: mockIngredients.slice(0, -1)
-    };
-    const newIngredients = constructorReducer(
-      currentState,
-      addIngredient(ingredients[ingredients.length - 1])
-    );
-    expect(newIngredients).toEqual({
-      bun: null,
-      ingredients: ingredients
+  describe('Добавление ингредиентов в конструктор бургера', () => {
+    test('Добавление начинки', () => {
+      const currentState = {
+        bun: null,
+        ingredients: mockIngredients.slice(0, -1)
+      };
+      const newIngredients = constructorReducer(
+        currentState,
+        addIngredient(ingredients[ingredients.length - 1])
+      );
+      expect(newIngredients).toEqual({
+        bun: null,
+        ingredients: ingredients
+      });
+    });
+
+    test('Добавление булки', () => {
+      const fisrtBun = constructorReducer(initialState, addBun(buns[0])); //добавляем один вид булочки
+      const secondBun = constructorReducer(fisrtBun, addBun(buns[1])); // заменяем на другую булку
+
+      expect(secondBun).toEqual({
+        // должна рендериться только вторая булочка
+        bun: buns[1],
+        ingredients: mockIngredients
+      });
     });
   });
 
-  test('Удаление ингредиента', () => {
-    const newIngredients = constructorReducer(
-      initialState,
-      removeIngredient(1)
-    );
-    expect(newIngredients).toEqual({
-      bun: null,
-      ingredients: [mockIngredients[0], mockIngredients[2]]
+  describe('Удаление ингредиентов из конструктора', () => {
+    test('Удаление одного ингредиента', () => {
+      const newIngredients = constructorReducer(
+        initialState,
+        removeIngredient(1)
+      );
+      expect(newIngredients).toEqual({
+        bun: null,
+        ingredients: [mockIngredients[0], mockIngredients[2]]
+      });
+    });
+
+    test('Очистка конструктора', () => {
+      const currentState = constructorReducer(initialState, addBun(buns[0]));
+      const clearedState = constructorReducer(currentState, clear());
+
+      expect(clearedState).toEqual({
+        bun: null,
+        ingredients: []
+      });
     });
   });
 
@@ -67,6 +95,7 @@ describe('[constructorSlice] Проверка работы редьюсера к
         ]
       });
     });
+
     test('Передвинуть ингредиент ниже', () => {
       const newIngredients = constructorReducer(
         initialState,

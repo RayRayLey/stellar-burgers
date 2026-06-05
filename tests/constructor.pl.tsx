@@ -26,10 +26,22 @@ test.describe('Загрузка списка ингредиентов с HAR', (
 });
 
 test.describe('Тест добавления ингредиента из списка в конструктор', () => {
-  test('Добавление булки', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    await page.routeFromHAR('./tests/hars/ingredients.har', {
+      url: '**/api/ingredients'
+    });
+
     await page.goto('/');
+    await expect(page.getByTestId('loading')).not.toBeVisible();
+  });
+
+  test('Добавление булки', async ({ page }) => {
     const testBun = 'Флюоресцентная булка R2-D3';
     const bun = page.getByTestId('ingredient-643d69a5c3f7b9001cfa093d');
+
+    await expect(page.getByTestId('constructor')).toContainText(
+      'Выберите булки'
+    );
 
     await bun.getByText('Добавить').click();
 
@@ -38,9 +50,12 @@ test.describe('Тест добавления ингредиента из спи�
   });
 
   test('Добавление начинки', async ({ page }) => {
-    await page.goto('/');
     const testSauce = 'Соус традиционный галактический';
     const sauce = page.getByTestId('ingredient-643d69a5c3f7b9001cfa0944');
+
+    await expect(page.getByTestId('constructor')).toContainText(
+      'Выберите начинку'
+    );
 
     await sauce.getByText('Добавить').click();
 
@@ -53,7 +68,13 @@ test.describe('Тест модального окна ингредиента', (
   const testIngredient = 'Кристаллы марсианских альфа-сахаридов';
 
   test.beforeEach(async ({ page }) => {
+    await page.routeFromHAR('./tests/hars/ingredients.har', {
+      url: '**/api/ingredients'
+    });
+
     await page.goto('/');
+    await expect(page.getByTestId('loading')).not.toBeVisible();
+    await expect(page.getByTestId('ingredient-modal')).toHaveCount(0);
   });
 
   test('Открытие и отображение нужных данных', async ({ page }) => {
@@ -132,9 +153,8 @@ test.describe('Тест процесса создания заказа', () => {
     });
 
     await page.goto('/');
-    await expect(page.getByTestId('ingredients')).toBeVisible({
-      timeout: 10000
-    });
+    await expect(page.getByTestId('ingredients')).toBeVisible();
+    await expect(page.getByTestId('order-modal')).toHaveCount(0);
   });
 
   test.afterEach(async ({ context }) => {
@@ -160,6 +180,7 @@ test.describe('Тест процесса создания заказа', () => {
     await orderButton.click();
 
     await expect(page.getByTestId('order-modal')).toContainText(number);
+    await expect(page.getByTestId('loading')).not.toBeVisible();
     await page.getByTestId('close-button').click();
   });
 
@@ -180,6 +201,7 @@ test.describe('Тест процесса создания заказа', () => {
     await orderButton.click();
 
     await expect(page.getByTestId('order-modal')).toBeVisible();
+    await expect(page.getByTestId('loading')).not.toBeVisible();
     await page.getByTestId('close-button').click();
 
     await expect(page.getByTestId('constructor')).toContainText(

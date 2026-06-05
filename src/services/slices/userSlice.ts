@@ -212,6 +212,8 @@ export const checkUserAuth = createAsyncThunk(
   }
 );
 
+export const userReducer = userSlice.reducer;
+
 export const {
   getUserSelector,
   authCheckedSelector,

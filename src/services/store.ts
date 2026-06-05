@@ -1,4 +1,4 @@
-import { combineSlices, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import {
   TypedUseSelectorHook,
@@ -6,19 +6,19 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 
-import { ingredientSlice } from '../services/slices/ingredientsSlice';
-import { userSlice } from './slices/userSlice';
-import { orderSlice } from './slices/ordersSlice';
-import { feedSlice } from './slices/feedsSlice';
-import { constructorSlice } from './slices/constructorSlice';
+import { ingredientsReducer } from '../services/slices/ingredientsSlice';
+import { userReducer } from './slices/userSlice';
+import { ordersReducer } from './slices/ordersSlice';
+import { feedsReducer } from './slices/feedsSlice';
+import { constructorReducer } from './slices/constructorSlice';
 
-export const rootReducer = combineSlices(
-  ingredientSlice,
-  userSlice,
-  orderSlice,
-  feedSlice,
-  constructorSlice
-);
+export const rootReducer = combineReducers({
+  ingredients: ingredientsReducer,
+  user: userReducer,
+  orders: ordersReducer,
+  feeds: feedsReducer,
+  burgerConstructor: constructorReducer
+});
 
 const store = configureStore({
   reducer: rootReducer,
