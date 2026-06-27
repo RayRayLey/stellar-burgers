@@ -107,6 +107,8 @@ export const orderSlice = createSlice({
   }
 });
 
+export const ordersReducer = orderSlice.reducer;
+
 export const {
   getOrdersSelector,
   currentOrderSelector,

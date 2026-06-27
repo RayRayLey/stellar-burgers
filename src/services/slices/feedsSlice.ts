@@ -53,6 +53,8 @@ export const feedSlice = createSlice({
   }
 });
 
+export const feedsReducer = feedSlice.reducer;
+
 export const {
   getFeedsSelector,
   totalSelector,
